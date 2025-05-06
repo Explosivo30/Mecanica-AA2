@@ -15,6 +15,7 @@ public class PhysicsBody : MonoBehaviour
 
     private SphereColliderCustom sphereCollider;
     WallCollider[] walls;
+    LevelLoader endLevel;
 
     //Ballistic Collision
     private Vector3 groundNormalVector;
@@ -24,6 +25,7 @@ public class PhysicsBody : MonoBehaviour
     {
         sphereCollider = GetComponent<SphereColliderCustom>();
         walls = FindObjectsOfType<WallCollider>();
+        endLevel = FindObjectOfType<LevelLoader>();
     }
 
     void FixedUpdate()
@@ -40,6 +42,7 @@ public class PhysicsBody : MonoBehaviour
                 if (vDotN < 0)
                 {
                     velocity -= (1 + elasticity) * vDotN * normal;
+                    endLevel?.RegisterStickContact();
                 }
 
                 transform.position += normal * penetration;
