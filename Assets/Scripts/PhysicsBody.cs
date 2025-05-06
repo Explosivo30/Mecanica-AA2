@@ -28,24 +28,35 @@ public class PhysicsBody : MonoBehaviour
         endLevel = FindObjectOfType<LevelLoader>();
     }
 
-    void FixedUpdate()
+    void Update()
     {
         // Detectar todas las paredes en la escena
-       
+
 
         foreach (var wallObj in walls)
         {
-            Wall wall = wallObj.ToWall();
-            if (sphereCollider.CollidesWith(wall, out Vector3 normal, out Vector3 contactPoint, out float penetration))
-            {
-                float vDotN = Vector3.Dot(velocity, normal);
-                if (vDotN < 0)
-                {
-                    velocity -= (1 + elasticity) * vDotN * normal;
-                    endLevel?.RegisterStickContact();
-                }
+            
+            //List<Wall> wallList = wallObj.GetWalls();
 
-                transform.position += normal * penetration;
+            foreach (Wall wall in wallObj.GetWalls())
+            {
+                // Comprobamos colisión individualmente con cada pared
+                if (sphereCollider.CollidesWith(wall, wallObj.transform, out Vector3 normal, out Vector3 contactPoint, out float penetration))
+                {
+                    float vDotN = Vector3.Dot(velocity, normal);
+                    if (vDotN < 0)
+                    {
+                        // Refleja la velocidad según elasticidad
+                        velocity -= (1 + elasticity) * vDotN * normal;
+                        endLevel?.RegisterStickContact();
+                    }
+
+                    // Corrige la posición
+                    transform.position += normal * penetration;
+
+                    // Solo se resuelve una colisión por frame
+                    break;
+                }
             }
         }
 

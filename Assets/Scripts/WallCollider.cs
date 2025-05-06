@@ -7,31 +7,51 @@ public class WallCollider : MonoBehaviour
     public Vector3 localNormal = Vector3.right;
     public float epsilon = 0.2f;
 
-    public Vector3 Normal => transform.rotation * localNormal.normalized;
-    public float Distance => Vector3.Dot(Normal, transform.position);
+    private static readonly Vector3[] localNormals = new Vector3[]
+  {
+        Vector3.right,
+        Vector3.left,
+        Vector3.up,
+        Vector3.down,
+        Vector3.forward,
+        Vector3.back
+  };
 
-    public Wall ToWall()
+    // Genera todas las paredes del cubo dinámicamente
+    public List<Wall> GetWalls()
     {
-        return new Wall(Normal, Distance, epsilon);
+        List<Wall> walls = new List<Wall>();
+
+        for (int i = 0; i < localNormals.Length; i++)
+        {
+            Vector3 normal = transform.rotation * localNormals[i];
+            Vector3 halfExtents = transform.localScale * 0.5f;
+            float offset = Vector3.Dot(normal, transform.position + Vector3.Scale(localNormals[i], halfExtents));
+            walls.Add(new Wall(normal, offset, epsilon));
+        }
+
+        return walls;
     }
 
     void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
-
-        Vector3 worldNormal = Normal;
         Vector3 center = transform.position;
 
-        // Draw normal line
-        Gizmos.DrawLine(center, center + worldNormal * 1.5f);
-
-        // Draw aligned wall box (rotate to match the custom local normal)
-        // Build a rotation that aligns Z+ with our wall normal
-        Quaternion lookRotation = Quaternion.LookRotation(worldNormal);
-        Matrix4x4 matrix = Matrix4x4.TRS(center, lookRotation, transform.localScale);
-        Gizmos.matrix = matrix;
+        // Dibuja el cubo de colisión
+        Gizmos.matrix = Matrix4x4.TRS(center, transform.rotation, transform.localScale);
         Gizmos.DrawWireCube(Vector3.zero, Vector3.one);
         Gizmos.matrix = Matrix4x4.identity;
+
+        // Dibuja las 6 normales (una por cara)
+        foreach (var localNormal in localNormals)
+        {
+            Vector3 normal = transform.rotation * localNormal;
+            Vector3 halfExtents = transform.localScale * 0.5f;
+            Vector3 faceCenter = center + Vector3.Scale(localNormal, halfExtents);
+
+            Gizmos.DrawLine(faceCenter, faceCenter + normal * 0.5f);
+        }
     }
 }
 
