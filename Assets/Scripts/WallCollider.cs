@@ -18,7 +18,7 @@ public class WallCollider : MonoBehaviour
         Vector3.back
   };
 
-    private void OnEnable()
+    private void Start()
     {
         if(WallManager.instance != null)
         {
