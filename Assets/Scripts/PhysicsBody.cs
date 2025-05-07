@@ -14,7 +14,6 @@ public class PhysicsBody : MonoBehaviour
     public float elasticity = 0.5f;
 
     private SphereColliderCustom sphereCollider;
-    WallCollider[] walls;
     LevelLoader endLevel;
 
     //Ballistic Collision
@@ -24,14 +23,14 @@ public class PhysicsBody : MonoBehaviour
     void Start()
     {
         sphereCollider = GetComponent<SphereColliderCustom>();
-        walls = FindObjectsOfType<WallCollider>();
         endLevel = FindObjectOfType<LevelLoader>();
     }
 
     void Update()
     {
         // Detectar todas las paredes en la escena
-
+        var walls = WallManager.instance?.Walls;
+        if (walls == null) return;
 
         foreach (var wallObj in walls)
         {
@@ -49,6 +48,16 @@ public class PhysicsBody : MonoBehaviour
                         // Refleja la velocidad según elasticidad
                         velocity -= (1 + elasticity) * vDotN * normal;
                         endLevel?.RegisterStickContact();
+
+                        float normalForce = mass * Mathf.Abs(gravity);
+
+                        // Calculo del Torque para aplicar la friccion
+                        //Tal vez hay que quitar el el primer radio
+                        float torque = -wall.friction * sphereCollider.radius * normalForce * sphereCollider.radius;
+                        float momentumOfInertia = 0.4f * mass * Mathf.Pow(sphereCollider.radius, 2);
+                        float angularAccel = torque / momentumOfInertia;
+                        Debug.Log(angularAccel);
+                        angularVelocity += angularAccel * Time.fixedDeltaTime;
                     }
 
                     // Corrige la posición

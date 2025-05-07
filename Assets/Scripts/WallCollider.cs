@@ -6,6 +6,7 @@ public class WallCollider : MonoBehaviour
 {
     public Vector3 localNormal = Vector3.right;
     public float epsilon = 0.2f;
+    public float friction = 0.2f;
 
     private static readonly Vector3[] localNormals = new Vector3[]
   {
@@ -17,6 +18,22 @@ public class WallCollider : MonoBehaviour
         Vector3.back
   };
 
+    private void OnEnable()
+    {
+        if(WallManager.instance != null)
+        {
+            WallManager.instance.RegisterWall(this);
+        }
+    }
+
+    private void OnDisable()
+    {
+        if(WallManager.instance != null)
+        {
+            WallManager.instance.UnregisterWall(this);
+        }
+    }
+
     // Genera todas las paredes del cubo dinámicamente
     public List<Wall> GetWalls()
     {
@@ -27,7 +44,7 @@ public class WallCollider : MonoBehaviour
             Vector3 normal = transform.rotation * localNormals[i];
             Vector3 halfExtents = transform.localScale * 0.5f;
             float offset = Vector3.Dot(normal, transform.position + Vector3.Scale(localNormals[i], halfExtents));
-            walls.Add(new Wall(normal, offset, epsilon));
+            walls.Add(new Wall(normal, offset, epsilon, friction));
         }
 
         return walls;
@@ -60,12 +77,14 @@ public struct Wall
     public Vector3 normal;
     public float distance;
     public float epsilon;
+    public float friction;
 
-    public Wall(Vector3 normal, float distance, float epsilon)
+    public Wall(Vector3 normal, float distance, float epsilon, float friction)
     {
         this.normal = normal.normalized;
         this.distance = distance;
         this.epsilon = epsilon;
+        this.friction = friction;
     }
 
 }
