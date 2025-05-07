@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class WallCollider : MonoBehaviour
 {
-    public Vector3 localNormal = Vector3.right;
+
     public float epsilon = 0.2f;
     public float friction = 0.2f;
 

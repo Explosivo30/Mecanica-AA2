@@ -17,20 +17,38 @@ public class SphereColliderCustom : MonoBehaviour
 
         if (Mathf.Abs(d) < radius + wall.epsilon)
         {
-            // Proyectar el punto al plano
+            // Punto más cercano al plano
             Vector3 projected = center - wall.normal * d;
 
-            // Transformar el punto proyectado al espacio local de la pared
-            Vector3 localPoint = wallTransform.InverseTransformPoint(projected);
+            // Obtenemos el centro de la cara
+            Vector3 halfExtents = Vector3.Scale(wallTransform.lossyScale, wall.normal.normalized) * 0.5f;
+            Vector3 faceCenter = wallTransform.position + wall.normal.normalized * Vector3.Dot(halfExtents, wall.normal.normalized);
 
-            // Ahora verificar si está dentro del área escalada (p.ej. dentro del rectángulo)
-            Vector3 halfSize = wallTransform.localScale * 0.5f;
+            // Base ortonormal sobre la cara
+            Vector3 tangent1;
+            if (Mathf.Abs(Vector3.Dot(wall.normal, Vector3.up)) < 0.99f)
+                tangent1 = Vector3.Cross(wall.normal, Vector3.up);
+            else
+                tangent1 = Vector3.Cross(wall.normal, Vector3.right);
+            tangent1.Normalize();
+            Vector3 tangent2 = Vector3.Cross(wall.normal, tangent1).normalized;
 
-            if (Mathf.Abs(localPoint.x) <= halfSize.x && Mathf.Abs(localPoint.y) <= halfSize.y && Mathf.Abs(localPoint.z) <= halfSize.z)
+            // Coordenadas del punto proyectado en la cara
+            Vector3 toProjected = projected - faceCenter;
+            float u = Vector3.Dot(toProjected, tangent1);
+            float v = Vector3.Dot(toProjected, tangent2);
+
+            // Tamaños reales de la cara (según orientación y escala)
+            Vector3 worldScale = wallTransform.lossyScale;
+            float width = Mathf.Abs(Vector3.Dot(worldScale, tangent1));
+            float height = Mathf.Abs(Vector3.Dot(worldScale, tangent2));
+
+            if (Mathf.Abs(u) <= width * 0.5f && Mathf.Abs(v) <= height * 0.5f)
             {
                 collisionNormal = d > 0 ? wall.normal : -wall.normal;
                 contactPoint = projected;
                 penetration = radius - Mathf.Abs(d);
+                Debug.Log("Touching (accurate scaled)");
                 return true;
             }
         }
@@ -38,6 +56,7 @@ public class SphereColliderCustom : MonoBehaviour
         collisionNormal = Vector3.zero;
         contactPoint = Vector3.zero;
         penetration = 0f;
+        
         return false;
     }
 }
