@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 928730254796747069}
   - component: {fileID: 1121534021156403236}
   - component: {fileID: 4054884420579743693}
+  - component: {fileID: 4833837515957776082}
   m_Layer: 0
   m_Name: Ball
   m_TagString: Untagged
@@ -242,7 +243,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c99d2d8174760f4d9935cac8c3aa83e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ball: {fileID: 0}
+  ball: {fileID: 928730254796747069}
   maxForce: 10
   forceMultiplier: 1
   aimLine: {fileID: 1121534021156403236}
+--- !u!114 &4833837515957776082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1243586746366652000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d85a64adfe3d4304d8aba505934a09e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 0.5
