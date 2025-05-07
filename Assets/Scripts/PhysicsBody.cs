@@ -14,8 +14,6 @@ public class PhysicsBody : MonoBehaviour
     private SphereColliderCustom sphereCollider;
     private LevelLoader endLevel;
 
-    private Vector3 groundNormalVector = Vector3.up;
-    private float collisionFactor = 0.5f;
     private float minAirHeight = 1.0f;
     private float dragCoefficient = 0.47f; 
     private float airDensity = 1.2f; // kg/m^3, densidad del aire
@@ -31,22 +29,15 @@ public class PhysicsBody : MonoBehaviour
     {
         ApplyGravity();
         ApplyAirResistance();
-        HandleCollisions();
         ApplyRollingResistance();
+        HandleCollisions();
         ApplyMovement();
     }
 
     void ApplyGravity()
     {
-        Vector3 gravityDirection = groundNormalVector.normalized;
-        float theta = Vector3.Angle(Vector3.down, gravityDirection) * Mathf.Deg2Rad;
-
-        // Calcula las componentes paralela y normal de la gravedad
-        Vector3 gravityForceParallel = mass * Mathf.Abs(gravity) * Mathf.Sin(theta) * -gravityDirection;
-        Vector3 gravityForceNormal = mass * Mathf.Abs(gravity) * Mathf.Cos(theta) * -gravityDirection;
-
-        // Aplica solo la componente paralela como fuerza
-        velocity += gravityForceParallel * Time.fixedDeltaTime / mass;
+        Vector3 gravityForce = new Vector3(0, mass * gravity, 0);
+        velocity += gravityForce * Time.fixedDeltaTime / mass;
     }
 
     void ApplyAirResistance()
@@ -57,6 +48,27 @@ public class PhysicsBody : MonoBehaviour
             float dragForceMagnitude = 0.5f * airDensity * speed * speed * crossSectionalArea * dragCoefficient;
             Vector3 dragForce = -dragForceMagnitude * velocity.normalized;
             velocity += dragForce * Time.fixedDeltaTime / mass;
+        }
+    }
+
+    void ApplyRollingResistance()
+    {
+        if (velocity.magnitude > 0)
+        {
+            float normalForce = mass * Mathf.Abs(gravity);
+            float rollingResistance = -friction * normalForce * sphereCollider.radius;
+            float momentumOfInertia = (2.0f / 5.0f) * mass * Mathf.Pow(sphereCollider.radius, 2);
+            float angularAccel = rollingResistance / momentumOfInertia;
+
+            // Ajusta la velocidad lineal para cumplir con ω = v/r
+            float angularSpeed = angularVelocity * sphereCollider.radius;
+            float linearSpeed = velocity.magnitude;
+
+            // Sincroniza la velocidad lineal con la velocidad angular
+            angularVelocity = linearSpeed / sphereCollider.radius;
+
+            // Reduce la velocidad gradualmente por resistencia al rodamiento
+            velocity -= velocity.normalized * (angularAccel * Time.fixedDeltaTime * sphereCollider.radius);
         }
     }
 
@@ -86,27 +98,6 @@ public class PhysicsBody : MonoBehaviour
                     break;
                 }
             }
-        }
-    }
-
-    void ApplyRollingResistance()
-    {
-        if (velocity.magnitude > 0)
-        {
-            float normalForce = mass * Mathf.Abs(gravity);
-            float rollingResistance = -friction * normalForce * sphereCollider.radius;
-            float momentumOfInertia = (2.0f / 5.0f) * mass * Mathf.Pow(sphereCollider.radius, 2);
-            float angularAccel = rollingResistance / momentumOfInertia;
-
-            // Ajusta la velocidad lineal para cumplir con ω = v/r
-            float angularSpeed = angularVelocity * sphereCollider.radius;
-            float linearSpeed = velocity.magnitude;
-
-            // Sincroniza la velocidad lineal con la velocidad angular
-            angularVelocity = linearSpeed / sphereCollider.radius;
-
-            // Reduce la velocidad gradualmente por resistencia al rodamiento
-            velocity -= velocity.normalized * (angularAccel * Time.fixedDeltaTime * sphereCollider.radius);
         }
     }
 
