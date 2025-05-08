@@ -13,6 +13,13 @@ public class PlayerController : MonoBehaviour
     private Vector3 endDragPosition;
     private bool isDragging = false;
 
+    private LevelLoader endLevel;
+
+    private void Start()
+    {
+        endLevel = FindObjectOfType<LevelLoader>();
+    }
+
     void LateUpdate()
     {
         if (Input.GetMouseButtonDown(0))
@@ -26,7 +33,8 @@ public class PlayerController : MonoBehaviour
         else if (Input.GetMouseButtonUp(0) && isDragging)
         {
             EndDrag();
-        } 
+            endLevel?.RegisterStickContact();
+        }
     }
 
     void StartDrag()

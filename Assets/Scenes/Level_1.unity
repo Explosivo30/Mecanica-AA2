@@ -2206,6 +2206,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1121534021156403236, guid: a1a633d12080207489e54bd747737646,
+        type: 3}
+      propertyPath: m_Parameters.colorGradient.m_ColorSpace
+      value: -1
+      objectReference: {fileID: 0}
     - target: {fileID: 1243586746366652000, guid: a1a633d12080207489e54bd747737646,
         type: 3}
       propertyPath: m_Name
