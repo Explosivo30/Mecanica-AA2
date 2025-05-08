@@ -4,31 +4,37 @@ using UnityEngine;
 
 public class WallCollider : MonoBehaviour
 {
-
     public float epsilon = 0.2f;
     public float friction = 0.2f;
 
     private static readonly Vector3[] localNormals = new Vector3[]
-  {
+    {
         Vector3.right,
         Vector3.left,
         Vector3.up,
         Vector3.down,
         Vector3.forward,
         Vector3.back
-  };
+    };
 
     private void Start()
     {
-        if(WallManager.instance != null)
+        if (WallManager.instance != null)
         {
             WallManager.instance.RegisterWall(this);
+        }
+
+        // Automatically add a BoxCollider if one doesn't exist
+        if (GetComponent<Collider>() == null)
+        {
+            BoxCollider boxCollider = gameObject.AddComponent<BoxCollider>();
+            boxCollider.isTrigger = false;
         }
     }
 
     private void OnDisable()
     {
-        if(WallManager.instance != null)
+        if (WallManager.instance != null)
         {
             WallManager.instance.UnregisterWall(this);
         }

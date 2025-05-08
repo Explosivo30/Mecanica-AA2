@@ -40,14 +40,20 @@ public class PlayerController : MonoBehaviour
     void UpdateDrag()
     {
         endDragPosition = GetMouseWorldPosition();
+
         Vector3 direction = startDragPosition - endDragPosition;
+        direction.y = 0;  
+
         float forceMagnitude = Mathf.Clamp(direction.magnitude * forceMultiplier, 0, maxForce);
         Vector3 force = direction.normalized * forceMagnitude;
 
-        // Actualiza la linea de dirección
+        
         aimLine.SetPosition(0, ball.transform.position);
         aimLine.SetPosition(1, ball.transform.position + force);
+
+        Debug.Log("Dragging... Force: " + force);
     }
+
 
     void EndDrag()
     {
@@ -55,20 +61,27 @@ public class PlayerController : MonoBehaviour
         aimLine.enabled = false;
 
         Vector3 direction = startDragPosition - endDragPosition;
+        direction.y = 0;  // Ignora la componente vertical
+
         float forceMagnitude = Mathf.Clamp(direction.magnitude * forceMultiplier, 0, maxForce);
         Vector3 force = direction.normalized * forceMagnitude;
 
-        // Aplica la fuerza a la bola
+        // Aplica la fuerza
         ball.velocity += force;
+        Debug.Log("End Drag, Applied Force: " + force);
     }
+
 
     Vector3 GetMouseWorldPosition()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit))
+        if (Physics.Raycast(ray, out RaycastHit hit, 100f))
         {
+            Debug.DrawRay(ray.origin, ray.direction * 100f, Color.red, 2f);
             return hit.point;
         }
+        Debug.LogWarning("No ground detected!");
         return Vector3.zero;
     }
+
 }
