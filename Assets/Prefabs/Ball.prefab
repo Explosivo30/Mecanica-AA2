@@ -36,7 +36,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &8367732229946002990
 MeshFilter:
@@ -247,6 +247,9 @@ MonoBehaviour:
   maxForce: 10
   forceMultiplier: 1
   aimLine: {fileID: 1121534021156403236}
+  cameraParent: {fileID: 0}
+  cameraPositionRadius: 1
+  cameraAngle: 0.5
 --- !u!114 &4833837515957776082
 MonoBehaviour:
   m_ObjectHideFlags: 0

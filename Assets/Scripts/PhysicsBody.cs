@@ -83,6 +83,7 @@ public class PhysicsBody : MonoBehaviour
             {
                 if (sphereCollider.CollidesWith(wall, wallObj.transform, out Vector3 normal, out Vector3 contactPoint, out float penetration))
                 {
+                    friction = wall.friction;
                     float vDotN = Vector3.Dot(velocity, normal);
                     if (vDotN < 0)
                     {
