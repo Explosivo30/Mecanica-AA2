@@ -25,7 +25,7 @@ public class PhysicsBody : MonoBehaviour
         endLevel = FindObjectOfType<LevelLoader>();
     }
 
-    void FixedUpdate()
+    void Update()
     {
         ApplyGravity();
         ApplyAirResistance();
@@ -37,7 +37,7 @@ public class PhysicsBody : MonoBehaviour
     void ApplyGravity()
     {
         Vector3 gravityForce = new Vector3(0, mass * gravity, 0);
-        velocity += gravityForce * Time.fixedDeltaTime / mass;
+        velocity += (gravityForce * Time.deltaTime) / mass;
     }
 
     void ApplyAirResistance()
@@ -47,7 +47,7 @@ public class PhysicsBody : MonoBehaviour
             float speed = velocity.magnitude;
             float dragForceMagnitude = 0.5f * airDensity * speed * speed * crossSectionalArea * dragCoefficient;
             Vector3 dragForce = -dragForceMagnitude * velocity.normalized;
-            velocity += dragForce * Time.fixedDeltaTime / mass;
+            velocity += dragForce * Time.deltaTime / mass;
         }
     }
 
@@ -68,7 +68,7 @@ public class PhysicsBody : MonoBehaviour
             angularVelocity = linearSpeed / sphereCollider.radius;
 
             // Reduce la velocidad gradualmente por resistencia al rodamiento
-            velocity += velocity.normalized * (angularAccel * Time.fixedDeltaTime * sphereCollider.radius);
+            velocity += velocity.normalized * (angularAccel * Time.deltaTime * sphereCollider.radius);
         }
     }
 
@@ -104,6 +104,6 @@ public class PhysicsBody : MonoBehaviour
 
     void ApplyMovement()
     {
-        transform.position += velocity * Time.fixedDeltaTime;
+        transform.position += velocity * Time.deltaTime;
     }
 }
