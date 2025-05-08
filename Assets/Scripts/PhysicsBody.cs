@@ -68,7 +68,7 @@ public class PhysicsBody : MonoBehaviour
             angularVelocity = linearSpeed / sphereCollider.radius;
 
             // Reduce la velocidad gradualmente por resistencia al rodamiento
-            velocity -= velocity.normalized * (angularAccel * Time.fixedDeltaTime * sphereCollider.radius);
+            velocity += velocity.normalized * (angularAccel * Time.fixedDeltaTime * sphereCollider.radius);
         }
     }
 
