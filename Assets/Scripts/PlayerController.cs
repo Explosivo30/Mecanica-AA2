@@ -13,7 +13,13 @@ public class PlayerController : MonoBehaviour
     private Vector3 endDragPosition;
     private bool isDragging = false;
 
-    void Update()
+    private GameObject cameraParent;
+    private GameObject mainCamera;
+    public float cameraPositionRadius;
+    public float cameraAngle;
+
+
+    void LateUpdate()
     {
         if (Input.GetMouseButtonDown(0))
         {
@@ -27,6 +33,16 @@ public class PlayerController : MonoBehaviour
         {
             EndDrag();
         }
+
+        
+        if (Input.GetKey(KeyCode.A))
+        {
+            cameraParent.transform.RotateAround(transform.position, new Vector3(0, 1, 0), cameraAngle);
+        }
+        else if (Input.GetKey(KeyCode.D))
+        {
+            cameraParent.transform.RotateAround(transform.position, new Vector3(0, 1, 0), -cameraAngle);
+        }  
     }
 
     void StartDrag()
@@ -83,5 +99,4 @@ public class PlayerController : MonoBehaviour
         Debug.LogWarning("No ground detected!");
         return Vector3.zero;
     }
-
 }
