@@ -13,12 +13,6 @@ public class PlayerController : MonoBehaviour
     private Vector3 endDragPosition;
     private bool isDragging = false;
 
-    private GameObject cameraParent;
-    private GameObject mainCamera;
-    public float cameraPositionRadius;
-    public float cameraAngle;
-
-
     void LateUpdate()
     {
         if (Input.GetMouseButtonDown(0))
@@ -32,17 +26,7 @@ public class PlayerController : MonoBehaviour
         else if (Input.GetMouseButtonUp(0) && isDragging)
         {
             EndDrag();
-        }
-
-        
-        if (Input.GetKey(KeyCode.A))
-        {
-            cameraParent.transform.RotateAround(transform.position, new Vector3(0, 1, 0), cameraAngle);
-        }
-        else if (Input.GetKey(KeyCode.D))
-        {
-            cameraParent.transform.RotateAround(transform.position, new Vector3(0, 1, 0), -cameraAngle);
-        }  
+        } 
     }
 
     void StartDrag()
