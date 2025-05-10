@@ -58,8 +58,14 @@ public class LevelLoader : MonoBehaviour
     void LoadNextLevel()
     {
         int currentIndex = SceneManager.GetActiveScene().buildIndex;
-        Debug.Log(currentIndex + 1);
-        SceneManager.LoadScene(currentIndex + 1);
+        if(currentIndex + 1 < SceneManager.sceneCountInBuildSettings)
+        {
+            SceneManager.LoadScene(currentIndex + 1);
+        }
+        else{
+            Debug.Log("Volviendo al primer nivel");
+            SceneManager.LoadScene(0);
+        }
     }
 
     void RestartLevel()

@@ -5,6 +5,7 @@ using UnityEngine;
 public class WallCollider : MonoBehaviour
 {
     public float epsilon = 0.2f;
+    public float elasticity = 0.5f;
     public float friction = 0.2f;
 
     private static readonly Vector3[] localNormals = new Vector3[]
@@ -72,7 +73,7 @@ public class WallCollider : MonoBehaviour
             // Esta 'd' es la proyección del vector de posición worldPointOnFace sobre la worldNormal.
             float distanceToOrigin = Vector3.Dot(worldNormal, worldPointOnFace);
 
-            walls.Add(new Wall(worldNormal, distanceToOrigin, epsilon, friction));
+            walls.Add(new Wall(worldNormal, distanceToOrigin, epsilon, friction, elasticity));
         }
 
         return walls;
@@ -106,13 +107,15 @@ public struct Wall
     public float distance;
     public float epsilon;
     public float friction;
+    public float elasticity;
 
-    public Wall(Vector3 normal, float distance, float epsilon, float friction)
+    public Wall(Vector3 normal, float distance, float epsilon, float friction, float elasticity)
     {
         this.normal = normal.normalized;
         this.distance = distance;
         this.epsilon = epsilon;
         this.friction = friction;
+        this.elasticity = elasticity;
     }
 
 }
