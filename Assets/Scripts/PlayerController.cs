@@ -13,6 +13,13 @@ public class PlayerController : MonoBehaviour
     private Vector3 endDragPosition;
     private bool isDragging = false;
 
+    private AudioSource audioHit;
+    private void Awake()
+    {
+        audioHit = GetComponent<AudioSource>();
+        
+    }
+
     void LateUpdate()
     {
         if (Input.GetMouseButtonDown(0))
@@ -52,6 +59,7 @@ public class PlayerController : MonoBehaviour
         aimLine.SetPosition(1, ball.transform.position + force);
 
         Debug.Log("Dragging... Force: " + force);
+        
     }
 
 
@@ -69,6 +77,7 @@ public class PlayerController : MonoBehaviour
         // Aplica la fuerza
         ball.velocity += force;
         Debug.Log("End Drag, Applied Force: " + force);
+        audioHit.PlayOneShot(audioHit.clip);
     }
 
 
@@ -83,4 +92,6 @@ public class PlayerController : MonoBehaviour
         Debug.LogWarning("No ground detected!");
         return Vector3.zero;
     }
+
+ 
 }

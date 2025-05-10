@@ -17,7 +17,8 @@ public class PhysicsBody : MonoBehaviour
     private float minAirHeight = 1.0f;
     private float dragCoefficient = 0.47f; 
     private float airDensity = 1.2f; // kg/m^3, densidad del aire
-    private float crossSectionalArea = 0.01f; 
+    private float crossSectionalArea = 0.01f;
+    
 
     void Start()
     {
@@ -89,6 +90,7 @@ public class PhysicsBody : MonoBehaviour
                     {
                         // Refleja la velocidad segun elasticidad
                         velocity -= (1 + elasticity) * vDotN * normal;
+                        
                         endLevel?.RegisterStickContact();
                     }
 
