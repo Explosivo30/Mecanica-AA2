@@ -16,7 +16,7 @@ public class CameraFollow : MonoBehaviour
 
         transform.position = parentToFollow.position;
         mainCamera = GetComponentInChildren<Camera>().transform;
-        mainCamera.position = offsetPosition;
+        mainCamera.position = transform.position + offsetPosition;
     }
 
     void LateUpdate()

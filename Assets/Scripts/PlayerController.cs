@@ -13,11 +13,13 @@ public class PlayerController : MonoBehaviour
     private Vector3 endDragPosition;
     private bool isDragging = false;
 
+    private LevelLoader endLevel;
     private AudioSource audioHit;
+
     private void Awake()
     {
         audioHit = GetComponent<AudioSource>();
-        
+        endLevel = FindObjectOfType<LevelLoader>();
     }
 
     void LateUpdate()
@@ -33,7 +35,8 @@ public class PlayerController : MonoBehaviour
         else if (Input.GetMouseButtonUp(0) && isDragging)
         {
             EndDrag();
-        } 
+            endLevel?.RegisterStickContact();
+        }
     }
 
     void StartDrag()

@@ -31,13 +31,10 @@ public class LevelLoader : MonoBehaviour
             if(stickContacts <= maxStickContactsPerLevel)
             {
                 levelCompleted = true;
-                Debug.Log("Siguiente Nivel");
-                //LoadNextLevel();
+                LoadNextLevel();
             }
             else
             {
-                //No se si esto es necesario pero lo pongo de momento
-                Debug.Log("Game Over. Has hecho más golpes de los permitidos");
                 RestartLevel();
             }
         }
@@ -61,7 +58,14 @@ public class LevelLoader : MonoBehaviour
     void LoadNextLevel()
     {
         int currentIndex = SceneManager.GetActiveScene().buildIndex;
-        SceneManager.LoadScene(currentIndex + 1);
+        if(currentIndex + 1 < SceneManager.sceneCountInBuildSettings)
+        {
+            SceneManager.LoadScene(currentIndex + 1);
+        }
+        else{
+            Debug.Log("Volviendo al primer nivel");
+            SceneManager.LoadScene(0);
+        }
     }
 
     void RestartLevel()

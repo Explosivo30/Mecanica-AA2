@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,7 +12,6 @@ public class PhysicsBody : MonoBehaviour
     public float elasticity = 0.5f;
 
     private SphereColliderCustom sphereCollider;
-    private LevelLoader endLevel;
 
     private float minAirHeight = 1.0f;
     private float dragCoefficient = 0.47f; 
@@ -23,7 +22,6 @@ public class PhysicsBody : MonoBehaviour
     void Start()
     {
         sphereCollider = GetComponent<SphereColliderCustom>();
-        endLevel = FindObjectOfType<LevelLoader>();
     }
 
     void Update()
@@ -85,13 +83,16 @@ public class PhysicsBody : MonoBehaviour
                 if (sphereCollider.CollidesWith(wall, wallObj.transform, out Vector3 normal, out Vector3 contactPoint, out float penetration))
                 {
                     friction = wall.friction;
+                    if(elasticity != wall.elasticity)
+                    {
+                        Debug.Log(wall.elasticity);
+                    }
+                    elasticity = wall.elasticity;
                     float vDotN = Vector3.Dot(velocity, normal);
                     if (vDotN < 0)
                     {
                         // Refleja la velocidad segun elasticidad
                         velocity -= (1 + elasticity) * vDotN * normal;
-                        
-                        endLevel?.RegisterStickContact();
                     }
 
                     // Corrige la posicion para evitar que la bola se hunda en la pared
