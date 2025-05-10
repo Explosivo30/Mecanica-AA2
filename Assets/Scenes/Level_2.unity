@@ -1976,6 +1976,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ball
       objectReference: {fileID: 0}
+    - target: {fileID: 1892577636737150509, guid: a1a633d12080207489e54bd747737646,
+        type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2634168729179118399, guid: a1a633d12080207489e54bd747737646,
         type: 3}
       propertyPath: m_RootOrder
