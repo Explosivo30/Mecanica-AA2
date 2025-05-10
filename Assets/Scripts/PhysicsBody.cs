@@ -6,7 +6,7 @@ public class PhysicsBody : MonoBehaviour
 {
     public float mass = 1f;
     public Vector3 velocity;
-    public float angularVelocity = 0f;
+    public Vector3 angularVelocity = Vector3.zero;
     public float friction = 0.1f;
     public float gravity = -9.81f;
     public float elasticity = 0.5f;
@@ -30,6 +30,7 @@ public class PhysicsBody : MonoBehaviour
         ApplyAirResistance();
         ApplyRollingResistance();
         HandleCollisions();
+        CalculateRollingRotation();
         ApplyMovement();
     }
 
@@ -58,13 +59,6 @@ public class PhysicsBody : MonoBehaviour
             float rollingResistance = -friction * normalForce * sphereCollider.radius;
             float momentumOfInertia = (2.0f / 5.0f) * mass * Mathf.Pow(sphereCollider.radius, 2);
             float angularAccel = rollingResistance / momentumOfInertia;
-
-            // Ajusta la velocidad lineal para cumplir con ω = v/r
-            float angularSpeed = angularVelocity * sphereCollider.radius;
-            float linearSpeed = velocity.magnitude;
-
-            // Sincroniza la velocidad lineal con la velocidad angular
-            angularVelocity = linearSpeed / sphereCollider.radius;
 
             // Reduce la velocidad gradualmente por resistencia al rodamiento
             velocity += velocity.normalized * (angularAccel * Time.deltaTime * sphereCollider.radius);
@@ -105,8 +99,31 @@ public class PhysicsBody : MonoBehaviour
         }
     }
 
+    void CalculateRollingRotation()
+    {
+        // Calcular velocidad angular basada en la velocidad lineal
+        if (velocity.magnitude > 0.001f)
+        {
+            // Eje de rotación
+            Vector3 rotationAxis = Vector3.Cross(Vector3.up, velocity.normalized); 
+            float angularSpeed = velocity.magnitude / sphereCollider.radius;        
+            angularVelocity = rotationAxis * angularSpeed;
+        }
+        else
+        {
+            angularVelocity = Vector3.zero;
+        }
+    }
+
     void ApplyMovement()
     {
         transform.position += velocity * Time.deltaTime;
+
+        // Aplica rotación visual basada en la velocidad angular
+        if (angularVelocity != Vector3.zero)
+        {
+            Quaternion deltaRotation = Quaternion.Euler(angularVelocity * Mathf.Rad2Deg * Time.deltaTime);
+            transform.rotation = deltaRotation * transform.rotation;
+        }
     }
 }
