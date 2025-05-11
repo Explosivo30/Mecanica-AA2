@@ -327,6 +327,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: EndLevel
       objectReference: {fileID: 0}
+    - target: {fileID: 5666112393498568259, guid: 50d15ced27dcb6a40b5de79b99eb1bc3,
+        type: 3}
+      propertyPath: maxStickContactsPerLevel
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 8567060221454506677, guid: 50d15ced27dcb6a40b5de79b99eb1bc3,
         type: 3}
       propertyPath: m_RootOrder
