@@ -25,7 +25,7 @@ public class LevelLoader : MonoBehaviour
     {
         if (levelCompleted || ball == null)
             return;
-
+        //Calculate if its inside the hole
         if (IsInsideGoal(ball.transform.position))
         {
             if(stickContacts <= maxStickContactsPerLevel)
